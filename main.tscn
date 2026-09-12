@@ -34,4 +34,11 @@ offset_right = 580.0
 offset_bottom = 83.0
 text = "Color: Red"
 
+[node name="ProgressLabel" type="Label" parent="UI"]
+offset_left = 500.0
+offset_top = 100.0
+offset_right = 610.0
+offset_bottom = 123.0
+text = "Progress: 0/10"
+
 [connection signal="timeout" from="CurrentPiece/Timer" to="CurrentPiece" method="_on_timer_timeout"]

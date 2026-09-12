@@ -2,6 +2,9 @@ extends Node
 
 const TOTAL_SPECTRUM_COLORS = 7
 const LINES_TO_UNLOCK = 3
+const BASE_FALL_TIME = 1.0
+const FALL_TIME_DECREASE = 0.1
+const MIN_FALL_TIME = 0.2
 
 var unlocked_color_index = 0
 var lines_cleared_for_current_color = 0
@@ -19,6 +22,10 @@ func _check_unlock_next_color():
 			
 func get_random_piece_color() -> int:
 	return randi() % (unlocked_color_index + 1)	
+	
+func get_current_fall_time() -> float:
+	var fall_time = BASE_FALL_TIME - (unlocked_color_index * FALL_TIME_DECREASE)
+	return max(fall_time, MIN_FALL_TIME)
 	
 func register_line_clear(cleared_color_ids: Array):
 	for color_id in cleared_color_ids:

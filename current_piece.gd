@@ -12,6 +12,7 @@ var current_color_id = 0
 var is_game_over = false
 @onready var board = get_node("../Board")
 @onready var game_manager = get_node("../GameManager")
+@onready var timer = $Timer
 
 func _can_move(offsets: Array, pos: Vector2i) -> bool:
 	for offset in offsets:
@@ -104,3 +105,4 @@ func _lock_piece():
 		board.grid[cell.y][cell.x] = current_color_id
 	board.check_and_clear_lines()
 	board.queue_redraw()
+	timer.wait_time = game_manager.get_current_fall_time()

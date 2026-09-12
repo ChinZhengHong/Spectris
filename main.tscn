@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://qt2bq6qa8sws"]
+[gd_scene load_steps=4 format=3 uid="uid://qt2bq6qa8sws"]
 
 [ext_resource type="Script" path="res://board.gd" id="1_cl72v"]
 [ext_resource type="Script" path="res://current_piece.gd" id="2_mr8xx"]
+[ext_resource type="Script" path="res://game_manager.gd" id="3_k0ri4"]
 
 [node name="Main" type="Node2D"]
 
@@ -13,5 +14,8 @@ script = ExtResource("2_mr8xx")
 
 [node name="Timer" type="Timer" parent="CurrentPiece"]
 autostart = true
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("3_k0ri4")
 
 [connection signal="timeout" from="CurrentPiece/Timer" to="CurrentPiece" method="_on_timer_timeout"]

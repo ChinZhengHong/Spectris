@@ -99,6 +99,30 @@ func _get_rotated_offsets(offsets: Array) -> Array:
 		rotated.append(Vector2i(-offset.y, offset.x))
 	return rotated
 
+func _get_rotated_offsets_ccw(offsets: Array) -> Array:
+	var rotated = []
+	for offset in offsets:
+		rotated.append(Vector2i(offset.y, -offset.x))
+	return rotated
+
+func _try_rotate(clockwise: bool):
+	if current_type == PieceData.PieceType.O:
+		return
+
+	var new_offsets
+	if clockwise:
+		new_offsets = _get_rotated_offsets(block_offsets)
+	else:
+		new_offsets = _get_rotated_offsets_ccw(block_offsets)
+
+	var kick_tests = [Vector2i(0, 0), Vector2i(-1, 0), Vector2i(1, 0), Vector2i(-2, 0), Vector2i(2, 0)]
+	for kick in kick_tests:
+		var test_pos = grid_position + kick
+		if _can_move(new_offsets, test_pos):
+			block_offsets = new_offsets
+			grid_position = test_pos
+			queue_redraw()
+			break
 
 func _ready():
 	_spawn_piece()
@@ -178,6 +202,11 @@ func _unhandled_input(event):
 			grid_position += Vector2i(0, 1)
 		_lock_piece()
 		_spawn_piece()
+		
+	elif event.is_action_pressed("rotate_ccw"):
+		_try_rotate(false)
+	elif event.is_action_pressed("rotate_cw"):
+		_try_rotate(true)
 
 func _on_timer_timeout() -> void:
 	if is_game_over:

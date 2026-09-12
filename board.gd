@@ -65,12 +65,6 @@ func _is_row_full(y: int) -> bool:
 func _clear_row(y: int):
 	var row_colors = grid[y].duplicate()
 	game_manager.register_line_clear(row_colors)
-	
-	if y + 1 < GRID_HEIGHT:
-		for x in range(GRID_WIDTH):
-			if grid[y + 1][x] == 7:
-				grid[y + 1][x] = -1
-		_collapse_all_empty_rows()
 
 	grid.remove_at(y)
 	var new_row = []
@@ -139,31 +133,3 @@ func _get_player_stack_height() -> int:
 			if grid[y][x] != -1 and grid[y][x] != 7:
 				return GRID_HEIGHT - y
 	return 0
-
-func _collapse_column(x: int, from_y: int):
-	for y in range(from_y, 0, -1):
-		grid[y][x] = grid[y - 1][x]
-	grid[0][x] = -1
-
-func _is_row_empty(y: int) -> bool:
-	for x in range(GRID_WIDTH):
-		if grid[y][x] != -1:
-			return false
-	return true
-
-func _collapse_empty_row(y: int):
-	grid.remove_at(y)
-	var new_row = []
-	for x in range(GRID_WIDTH):
-		new_row.append(-1)
-	grid.insert(0, new_row)
-
-func _collapse_all_empty_rows():
-	var seen_non_empty = false
-	for y in range(GRID_HEIGHT - 1, -1, -1):
-		if _is_row_empty(y):
-			if seen_non_empty:
-				_collapse_empty_row(y)
-				return
-		else:
-			seen_non_empty = true

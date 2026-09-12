@@ -105,7 +105,7 @@ func _spawn_piece():
 	var types = PieceData.PieceType.values()
 	current_type = types[randi() % types.size()]
 	block_offsets = PieceData.SHAPES[current_type]
-	grid_position = Vector2i(4, 0)
+	grid_position = Vector2i(4, 1)
 
 	var base_color = game_manager.get_random_piece_color()
 	block_colors = []

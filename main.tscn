@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://qt2bq6qa8sws"]
+[gd_scene load_steps=3 format=3 uid="uid://qt2bq6qa8sws"]
 
 [ext_resource type="Script" path="res://board.gd" id="1_cl72v"]
+[ext_resource type="Script" path="res://current_piece.gd" id="2_mr8xx"]
 
 [node name="Main" type="Node2D"]
 
@@ -8,3 +9,4 @@
 script = ExtResource("1_cl72v")
 
 [node name="CurrentPiece" type="Node2D" parent="."]
+script = ExtResource("2_mr8xx")

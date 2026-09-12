@@ -77,9 +77,14 @@ func _unhandled_input(event):
 	elif event.is_action_pressed("ui_up"):
 		if current_type != PieceData.PieceType.O:
 			var new_offsets = _get_rotated_offsets(block_offsets)
-			if _can_move(new_offsets, grid_position):
-				block_offsets = new_offsets
-				queue_redraw()
+			var kick_tests = [Vector2i(0, 0), Vector2i(-1, 0), Vector2i(1, 0), Vector2i(-2, 0), Vector2i(2, 0)]
+			for kick in kick_tests:
+				var test_pos = grid_position + kick
+				if _can_move(new_offsets, test_pos):
+					block_offsets = new_offsets
+					grid_position = test_pos
+					queue_redraw()
+					break
 
 
 func _on_timer_timeout() -> void:

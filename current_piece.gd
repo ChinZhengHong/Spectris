@@ -149,6 +149,7 @@ func _draw():
 		var cell = grid_position + block_offsets[i]
 		var rect = Rect2(cell.x * CELL_SIZE, cell.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
 		draw_rect(rect, board.get_color_for_id(block_colors[i]))
+		draw_rect(rect, Color.BLACK, false, 1.0)
 		
 # input
 func _unhandled_input(event):

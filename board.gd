@@ -50,6 +50,7 @@ func _draw():
 			if grid[y][x] != -1:
 				var rect = Rect2(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
 				draw_rect(rect, get_color_for_id(grid[y][x]))
+				draw_rect(rect, Color.BLACK, false, 1.0)
 
 # check the row
 func _is_row_full(y: int) -> bool:

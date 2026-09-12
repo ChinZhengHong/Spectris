@@ -8,6 +8,7 @@ const CELL_SIZE = 32
 var current_type = PieceData.PieceType.T
 var grid_position = Vector2i(4, 0)
 var block_offsets = []
+var current_color_id = 0
 var is_game_over = false
 @onready var board = get_node("../Board")
 
@@ -49,7 +50,7 @@ func _draw():
 	for offset in block_offsets:
 		var cell = grid_position + offset
 		var rect = Rect2(cell.x * CELL_SIZE, cell.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-		draw_rect(rect, Color.CYAN)
+		draw_rect(rect, board.get_color_for_id(current_color_id))
 		
 # input
 func _unhandled_input(event):
@@ -93,6 +94,6 @@ func _on_timer_timeout() -> void:
 func _lock_piece():
 	for offset in block_offsets:
 		var cell = grid_position + offset
-		board.grid[cell.y][cell.x] = 0
+		board.grid[cell.y][cell.x] = current_color_id
 	board.check_and_clear_lines()
 	board.queue_redraw()

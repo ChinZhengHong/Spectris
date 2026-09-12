@@ -18,7 +18,19 @@ func _init_grid():
 			row.append(-1) #initial value = -1, mean it is empty
 		grid.append(row)
 		
-	
+# color
+func get_color_for_id(id: int) -> Color:
+	match id:
+		0: return Color.RED
+		1: return Color.ORANGE
+		2: return Color.YELLOW
+		3: return Color.GREEN
+		4: return Color.BLUE
+		5: return Color(0.29, 0, 0.51)
+		6: return Color(0.58, 0, 0.83)
+		7: return Color.WHITE
+		_: return Color.GRAY
+
 # drawing line
 func _draw():
 	for x in range(GRID_WIDTH + 1):
@@ -35,7 +47,7 @@ func _draw():
 		for x in range(GRID_WIDTH):
 			if grid[y][x] != -1:
 				var rect = Rect2(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-				draw_rect(rect, Color.WHITE)
+				draw_rect(rect, get_color_for_id(grid[y][x]))
 
 # check the row
 func _is_row_full(y: int) -> bool:

@@ -7,6 +7,8 @@ const FALL_TIME_DECREASE = 0.1
 const MIN_FALL_TIME = 0.2
 const SCORE_PER_WHITE_BLOCK = 50
 var score_since_last_white = 0
+@onready var score_label = get_node("../UI/ScoreLabel")
+@onready var color_label = get_node("../UI/ColorLabel")
 var score = 0
 var unlocked_color_index = 0
 var lines_cleared_for_current_color = 0
@@ -44,3 +46,12 @@ func register_line_clear(cleared_color_ids: Array):
 	score_since_last_white += 10
 
 	_check_unlock_next_color()
+	_update_ui()
+	
+func _update_ui():
+	score_label.text = "Score: " + str(score)
+	var color_names = ["Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"]
+	color_label.text = "Color: " + color_names[unlocked_color_index]
+
+func _ready():
+	_update_ui()

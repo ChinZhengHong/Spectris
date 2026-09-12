@@ -62,6 +62,11 @@ func _is_row_full(y: int) -> bool:
 func _clear_row(y: int):
 	var row_colors = grid[y].duplicate()
 	game_manager.register_line_clear(row_colors)
+	
+	if y + 1 < GRID_HEIGHT:
+		for x in range(GRID_WIDTH):
+			if grid[y + 1][x] == 7:
+				grid[y + 1][x] = -1
 
 	grid.remove_at(y)
 	var new_row = []

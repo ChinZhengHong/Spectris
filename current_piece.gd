@@ -8,7 +8,7 @@ const CELL_SIZE = 32
 var current_type = PieceData.PieceType.T
 var grid_position = Vector2i(4, 0)
 var block_offsets = []
-var current_color_id = 0
+var block_colors = []
 
 var move_direction = 0
 var das_timer = 0.0
@@ -106,7 +106,15 @@ func _spawn_piece():
 	current_type = types[randi() % types.size()]
 	block_offsets = PieceData.SHAPES[current_type]
 	grid_position = Vector2i(4, 0)
-	current_color_id = game_manager.get_random_piece_color()
+
+	var base_color = game_manager.get_random_piece_color()
+	block_colors = []
+	for i in range(block_offsets.size()):
+		block_colors.append(base_color)
+
+	if game_manager.should_spawn_white_block():
+		var white_index = randi() % block_colors.size()
+		block_colors[white_index] = 7
 
 	if not _can_move(block_offsets, grid_position):
 		is_game_over = true
@@ -116,10 +124,10 @@ func _spawn_piece():
 	queue_redraw()
 	
 func _draw():
-	for offset in block_offsets:
-		var cell = grid_position + offset
+	for i in range(block_offsets.size()):
+		var cell = grid_position + block_offsets[i]
 		var rect = Rect2(cell.x * CELL_SIZE, cell.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-		draw_rect(rect, board.get_color_for_id(current_color_id))
+		draw_rect(rect, board.get_color_for_id(block_colors[i]))
 		
 # input
 func _unhandled_input(event):
@@ -153,9 +161,9 @@ func _on_timer_timeout() -> void:
 		_spawn_piece()
 		
 func _lock_piece():
-	for offset in block_offsets:
-		var cell = grid_position + offset
-		board.grid[cell.y][cell.x] = current_color_id
+	for i in range(block_offsets.size()):
+		var cell = grid_position + block_offsets[i]
+		board.grid[cell.y][cell.x] = block_colors[i]
 	board.check_and_clear_lines()
 	board.queue_redraw()
 	timer.wait_time = game_manager.get_current_fall_time()

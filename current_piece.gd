@@ -8,6 +8,18 @@ const CELL_SIZE = 32
 var current_type = PieceData.PieceType.T
 var grid_position = Vector2i(4, 0)
 var block_offsets = []
+@onready var board = get_node("../Board")
+
+func _can_move(offsets: Array, pos: Vector2i) -> bool:
+	for offset in offsets:
+		var cell = pos + offset
+		if cell.x < 0 or cell.x >= board.GRID_WIDTH:
+			return false
+		if cell.y < 0 or cell.y >= board.GRID_HEIGHT:
+			return false
+		if board.grid[cell.y][cell.x] != -1:
+			return false
+	return true
 
 func _ready():
 	_spawn_piece()
@@ -28,16 +40,33 @@ func _draw():
 # input
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_left"):
-		grid_position.x -= 1
-		queue_redraw()
+		var new_pos = grid_position + Vector2i(-1, 0)
+		if _can_move(block_offsets, new_pos):
+			grid_position = new_pos
+			queue_redraw()
 	elif event.is_action_pressed("ui_right"):
-		grid_position.x += 1
-		queue_redraw()
+		var new_pos = grid_position + Vector2i(1, 0)
+		if _can_move(block_offsets, new_pos):
+			grid_position = new_pos
+			queue_redraw()
 	elif event.is_action_pressed("ui_down"):
-		grid_position.y += 1
-		queue_redraw()
+		var new_pos = grid_position + Vector2i(0, 1)
+		if _can_move(block_offsets, new_pos):
+			grid_position = new_pos
+			queue_redraw()
 
 
 func _on_timer_timeout() -> void:
-	grid_position.y += 1
-	queue_redraw()
+	var new_pos = grid_position + Vector2i(0, 1)
+	if _can_move(block_offsets, new_pos):
+		grid_position = new_pos
+		queue_redraw()
+	else:
+		_lock_piece()
+		_spawn_piece()
+		
+func _lock_piece():
+	for offset in block_offsets:
+		var cell = grid_position + offset
+		board.grid[cell.y][cell.x] = 0
+	board.queue_redraw()

@@ -11,6 +11,7 @@ var block_offsets = []
 var current_color_id = 0
 var is_game_over = false
 @onready var board = get_node("../Board")
+@onready var game_manager = get_node("../GameManager")
 
 func _can_move(offsets: Array, pos: Vector2i) -> bool:
 	for offset in offsets:
@@ -38,6 +39,7 @@ func _spawn_piece():
 	current_type = types[randi() % types.size()]
 	block_offsets = PieceData.SHAPES[current_type]
 	grid_position = Vector2i(4, 0)
+	current_color_id = game_manager.get_random_piece_color()
 
 	if not _can_move(block_offsets, grid_position):
 		is_game_over = true

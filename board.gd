@@ -7,6 +7,8 @@ const CELL_SIZE = 32
 # color ID for every grid
 var grid = []
 
+@onready var game_manager = get_node("../GameManager")
+
 func _ready():
 	_init_grid()
 	
@@ -58,6 +60,9 @@ func _is_row_full(y: int) -> bool:
 	
 # clear row
 func _clear_row(y: int):
+	var row_colors = grid[y].duplicate()
+	game_manager.register_line_clear(row_colors)
+
 	grid.remove_at(y)
 	var new_row = []
 	for x in range(GRID_WIDTH):

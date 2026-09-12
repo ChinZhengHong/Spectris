@@ -17,6 +17,9 @@ func _check_unlock_next_color():
 			lines_cleared_for_current_color = 0
 			print("Unlocked color: ", unlocked_color_index)
 			
+func get_random_piece_color() -> int:
+	return randi() % (unlocked_color_index + 1)	
+	
 func register_line_clear(cleared_color_ids: Array):
 	for color_id in cleared_color_ids:
 		if color_id == unlocked_color_index:

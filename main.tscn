@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://qt2bq6qa8sws"]
+[gd_scene load_steps=5 format=3 uid="uid://qt2bq6qa8sws"]
 
 [ext_resource type="Script" path="res://board.gd" id="1_cl72v"]
 [ext_resource type="Script" path="res://current_piece.gd" id="2_mr8xx"]
 [ext_resource type="Script" path="res://game_manager.gd" id="3_k0ri4"]
+[ext_resource type="Script" path="res://next_piece_review.gd" id="4_hw73r"]
 
 [node name="Main" type="Node2D"]
 
@@ -40,5 +41,9 @@ offset_top = 100.0
 offset_right = 610.0
 offset_bottom = 123.0
 text = "Progress: 0/10"
+
+[node name="NextPieceReview" type="Node2D" parent="."]
+position = Vector2(500, 150)
+script = ExtResource("4_hw73r")
 
 [connection signal="timeout" from="CurrentPiece/Timer" to="CurrentPiece" method="_on_timer_timeout"]

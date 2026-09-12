@@ -1,7 +1,7 @@
 extends Node
 
 const TOTAL_SPECTRUM_COLORS = 7
-const LINES_TO_UNLOCK = [10, 20, 30, 40, 50, 50, 50]
+const LINES_TO_UNLOCK = [10, 15, 20, 25, 30, 35, 40]
 const BASE_FALL_TIME = 1.0
 const FALL_TIME_DECREASE = 0.1
 const MIN_FALL_TIME = 0.2

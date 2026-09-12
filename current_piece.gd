@@ -9,7 +9,9 @@ var current_type = PieceData.PieceType.T
 var grid_position = Vector2i(4, 0)
 var block_offsets = []
 var block_colors = []
-
+var next_type = PieceData.PieceType.T
+var next_offsets = []
+var next_colors = []
 var move_direction = 0
 var das_timer = 0.0
 var arr_timer = 0.0
@@ -101,20 +103,39 @@ func _get_rotated_offsets(offsets: Array) -> Array:
 func _ready():
 	_spawn_piece()
 	
-func _spawn_piece():
+func _generate_random_piece():
 	var types = PieceData.PieceType.values()
-	current_type = types[randi() % types.size()]
-	block_offsets = PieceData.SHAPES[current_type]
-	grid_position = Vector2i(4, 1)
+	var type = types[randi() % types.size()]
+	var offsets = PieceData.SHAPES[type]
 
 	var base_color = game_manager.get_random_piece_color()
-	block_colors = []
-	for i in range(block_offsets.size()):
-		block_colors.append(base_color)
+	var colors = []
+	for i in range(offsets.size()):
+		colors.append(base_color)
 
 	if game_manager.should_spawn_white_block():
-		var white_index = randi() % block_colors.size()
-		block_colors[white_index] = 7
+		var white_index = randi() % colors.size()
+		colors[white_index] = 7
+
+	return {"type": type, "offsets": offsets, "colors": colors}
+	
+func _spawn_piece():
+	if next_offsets.is_empty():
+		var first = _generate_random_piece()
+		current_type = first.type
+		block_offsets = first.offsets
+		block_colors = first.colors
+	else:
+		current_type = next_type
+		block_offsets = next_offsets
+		block_colors = next_colors
+
+	grid_position = Vector2i(4, 1)
+
+	var upcoming = _generate_random_piece()
+	next_type = upcoming.type
+	next_offsets = upcoming.offsets
+	next_colors = upcoming.colors
 
 	if not _can_move(block_offsets, grid_position):
 		is_game_over = true
@@ -122,7 +143,7 @@ func _spawn_piece():
 		return
 
 	queue_redraw()
-	
+
 func _draw():
 	for i in range(block_offsets.size()):
 		var cell = grid_position + block_offsets[i]

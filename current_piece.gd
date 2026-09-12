@@ -9,6 +9,15 @@ var current_type = PieceData.PieceType.T
 var grid_position = Vector2i(4, 0)
 var block_offsets = []
 var current_color_id = 0
+
+var move_direction = 0
+var das_timer = 0.0
+var arr_timer = 0.0
+var down_arr_timer = 0.0
+var down_pressed_last_frame = false
+var down_das_timer = 0.0
+const DAS_DELAY = 0.15
+const ARR_RATE = 0.05
 var is_game_over = false
 @onready var board = get_node("../Board")
 @onready var game_manager = get_node("../GameManager")
@@ -25,12 +34,69 @@ func _can_move(offsets: Array, pos: Vector2i) -> bool:
 			return false
 	return true
 
+func _try_move(direction: Vector2i):
+	var new_pos = grid_position + direction
+	if _can_move(block_offsets, new_pos):
+		grid_position = new_pos
+		queue_redraw()
+		
+func _process(delta):
+	if is_game_over:
+		return
+
+	if Input.is_action_pressed("ui_left"):
+		if move_direction != -1:
+			move_direction = -1
+			das_timer = 0.0
+			_try_move(Vector2i(-1, 0))
+		else:
+			das_timer += delta
+			if das_timer >= DAS_DELAY:
+				arr_timer += delta
+				if arr_timer >= ARR_RATE:
+					arr_timer = 0.0
+					_try_move(Vector2i(-1, 0))
+	elif Input.is_action_pressed("ui_right"):
+		if move_direction != 1:
+			move_direction = 1
+			das_timer = 0.0
+			_try_move(Vector2i(1, 0))
+		else:
+			das_timer += delta
+			if das_timer >= DAS_DELAY:
+				arr_timer += delta
+				if arr_timer >= ARR_RATE:
+					arr_timer = 0.0
+					_try_move(Vector2i(1, 0))
+	else:
+		move_direction = 0
+		das_timer = 0.0
+		arr_timer = 0.0
+		
+	if Input.is_action_pressed("ui_down"):
+		if not down_pressed_last_frame:
+			down_pressed_last_frame = true
+			down_das_timer = 0.0
+			_try_move(Vector2i(0, 1))
+		else:
+			down_das_timer += delta
+			if down_das_timer >= DAS_DELAY:
+				down_arr_timer += delta
+				if down_arr_timer >= ARR_RATE:
+					down_arr_timer = 0.0
+					_try_move(Vector2i(0, 1))
+	else:
+		down_pressed_last_frame = false
+		down_das_timer = 0.0
+		down_arr_timer = 0.0
+
 # rotate
 func _get_rotated_offsets(offsets: Array) -> Array:
 	var rotated = []
 	for offset in offsets:
 		rotated.append(Vector2i(-offset.y, offset.x))
 	return rotated
+
 
 func _ready():
 	_spawn_piece()
@@ -59,21 +125,8 @@ func _draw():
 func _unhandled_input(event):
 	if is_game_over:
 		return
-	if event.is_action_pressed("ui_left"):
-		var new_pos = grid_position + Vector2i(-1, 0)
-		if _can_move(block_offsets, new_pos):
-			grid_position = new_pos
-			queue_redraw()
-	elif event.is_action_pressed("ui_right"):
-		var new_pos = grid_position + Vector2i(1, 0)
-		if _can_move(block_offsets, new_pos):
-			grid_position = new_pos
-			queue_redraw()
-	elif event.is_action_pressed("ui_down"):
-		var new_pos = grid_position + Vector2i(0, 1)
-		if _can_move(block_offsets, new_pos):
-			grid_position = new_pos
-			queue_redraw()
+	if event.is_action_pressed("ui_down"):
+		_try_move(Vector2i(0,1))
 			
 	elif event.is_action_pressed("ui_up"):
 		if current_type != PieceData.PieceType.O:

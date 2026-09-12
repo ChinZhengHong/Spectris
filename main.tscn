@@ -18,4 +18,20 @@ autostart = true
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource("3_k0ri4")
 
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="ScoreLabel" type="Label" parent="UI"]
+offset_left = 500.0
+offset_top = 20.0
+offset_right = 561.0
+offset_bottom = 43.0
+text = "Score: 0"
+
+[node name="ColorLabel" type="Label" parent="UI"]
+offset_left = 500.0
+offset_top = 60.0
+offset_right = 580.0
+offset_bottom = 83.0
+text = "Color: Red"
+
 [connection signal="timeout" from="CurrentPiece/Timer" to="CurrentPiece" method="_on_timer_timeout"]

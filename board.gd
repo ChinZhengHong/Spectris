@@ -1,13 +1,38 @@
 extends Node2D
+# constant
 const GRID_WIDTH = 10
 const GRID_HEIGHT = 20
 const CELL_SIZE = 32
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+# color ID for every grid
+var grid = []
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func _ready():
+	_init_grid()
+	
+func _init_grid():
+	grid.clear()
+	for y in range(GRID_HEIGHT):
+		var row = []
+		for x in range(GRID_WIDTH):
+			row.append(-1) #initial value = -1, mean it is empty
+		grid.append(row)
+		
+	
+# drawing line
+func _draw():
+	for x in range(GRID_WIDTH + 1):
+		var start = Vector2(x * CELL_SIZE, 0)
+		var end = Vector2(x * CELL_SIZE, GRID_HEIGHT * CELL_SIZE)
+		draw_line(start, end, Color.GRAY, 1.0)
+	
+	for y in range (GRID_HEIGHT + 1):
+		var start = Vector2(0, y * CELL_SIZE)
+		var end = Vector2(GRID_WIDTH * CELL_SIZE, y * CELL_SIZE)
+		draw_line(start, end, Color.GRAY, 1.0)
+		
+	for y in range(GRID_HEIGHT):
+		for x in range(GRID_WIDTH):
+			if grid[y][x] != -1:
+				var rect = Rect2(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+				draw_rect(rect, Color.WHITE)

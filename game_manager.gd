@@ -3,16 +3,27 @@ extends Node
 const TOTAL_SPECTRUM_COLORS = 7
 const LINES_TO_UNLOCK = [10, 15, 20, 25, 30, 35, 40]
 const BASE_FALL_TIME = 1.0
-const FALL_TIME_DECREASE = 0.1
+const FALL_TIME_DECREASE = 0.05
 const MIN_FALL_TIME = 0.2
 const TIME_DECREASE_INTERVAL = 30.0
-const TIME_DECREASE_AMOUNT = 0.05
+const TIME_DECREASE_AMOUNT = 0.02
 var elapsed_time = 0.0
 const SCORE_PER_WHITE_BLOCK = 50
 var score_since_last_white = 0
 @onready var score_label = get_node("../UI/ScoreLabel")
 @onready var color_label = get_node("../UI/ColorLabel")
 @onready var progress_label = get_node("../UI/ProgressLabel")
+@onready var clear_row_player = get_node("ClearRowPlayer")
+@onready var new_color_player = get_node("NewColorPlayer")
+@onready var game_over_player = get_node("GameOverPlayer")
+@onready var mutant_player = get_node("MutantPlayer")
+@onready var board = get_node("../Board")
+
+var clear_row_sounds = [
+	preload("res://sound_effect/ClearRow1.wav"),
+	preload("res://sound_effect/ClearRow2.wav"),
+	preload("res://sound_effect/ClearRow3.wav"),
+]
 var score = 0
 var unlocked_color_index = 0
 var lines_cleared_for_current_color = 0
@@ -27,6 +38,7 @@ func _check_unlock_next_color():
 		if unlocked_color_index < TOTAL_SPECTRUM_COLORS - 1:
 			unlocked_color_index += 1
 			lines_cleared_for_current_color = 0
+			new_color_player.play()
 			print("Unlocked color: ", unlocked_color_index)
 			
 func get_random_piece_color() -> int:
@@ -35,6 +47,7 @@ func get_random_piece_color() -> int:
 func should_spawn_white_block() -> bool:
 	if score_since_last_white >= SCORE_PER_WHITE_BLOCK:
 		score_since_last_white -= SCORE_PER_WHITE_BLOCK
+		mutant_player.play()
 		return true
 	return false
 
@@ -52,7 +65,9 @@ func register_line_clear(cleared_color_ids: Array):
 	score += 10
 	score_since_last_white += 10
 
+	_play_clear_row_sound()
 	_check_unlock_next_color()
+		
 	_update_ui()
 	
 func _update_ui():
@@ -66,7 +81,12 @@ func _update_ui():
 		progress_label.text = "Max color reached!"
 		
 func _ready():
+	mutant_player.play()
 	_update_ui()
 	
 func _process(delta):
 	elapsed_time += delta
+
+func _play_clear_row_sound():
+	clear_row_player.stream = clear_row_sounds[randi() % clear_row_sounds.size()]
+	clear_row_player.play()

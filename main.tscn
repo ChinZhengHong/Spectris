@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://qt2bq6qa8sws"]
+[gd_scene load_steps=9 format=3 uid="uid://qt2bq6qa8sws"]
 
 [ext_resource type="Script" path="res://board.gd" id="1_cl72v"]
 [ext_resource type="Script" path="res://current_piece.gd" id="2_mr8xx"]
 [ext_resource type="Script" path="res://game_manager.gd" id="3_k0ri4"]
 [ext_resource type="Script" path="res://next_piece_review.gd" id="4_hw73r"]
+[ext_resource type="AudioStream" uid="uid://d3kbsejwq5gmx" path="res://sound_effect/ClearRow1.wav" id="4_jf6q4"]
+[ext_resource type="AudioStream" uid="uid://bnqjrbqrbuetx" path="res://sound_effect/NewColor.wav" id="5_nbxyr"]
+[ext_resource type="AudioStream" uid="uid://bov74xd7arkq7" path="res://sound_effect/GameOver.wav" id="6_iasiy"]
+[ext_resource type="AudioStream" uid="uid://bodr6qgecui3w" path="res://sound_effect/Mutant.wav" id="7_mydde"]
 
 [node name="Main" type="Node2D"]
 
@@ -18,6 +22,18 @@ autostart = true
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource("3_k0ri4")
+
+[node name="ClearRowPlayer" type="AudioStreamPlayer" parent="GameManager"]
+stream = ExtResource("4_jf6q4")
+
+[node name="NewColorPlayer" type="AudioStreamPlayer" parent="GameManager"]
+stream = ExtResource("5_nbxyr")
+
+[node name="GameOverPlayer" type="AudioStreamPlayer" parent="GameManager"]
+stream = ExtResource("6_iasiy")
+
+[node name="MutantPlayer" type="AudioStreamPlayer" parent="GameManager"]
+stream = ExtResource("7_mydde")
 
 [node name="UI" type="CanvasLayer" parent="."]
 

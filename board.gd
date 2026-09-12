@@ -6,6 +6,8 @@ const CELL_SIZE = 32
 
 # color ID for every grid
 var grid = []
+var white_rows_count = 0
+var max_white_rows = GRID_HEIGHT / 2
 
 @onready var game_manager = get_node("../GameManager")
 
@@ -68,6 +70,7 @@ func _clear_row(y: int):
 		for x in range(GRID_WIDTH):
 			if grid[y + 1][x] == 7:
 				grid[y + 1][x] = -1
+		_collapse_all_empty_rows()
 
 	grid.remove_at(y)
 	var new_row = []
@@ -75,6 +78,9 @@ func _clear_row(y: int):
 		new_row.append(-1)
 	grid.insert(0, new_row)
 	
+	for x in range(GRID_WIDTH):
+		if row_colors[x] != -1:
+			_spawn_clear_particles(x, y, get_color_for_id(row_colors[x]))
 
 func check_and_clear_lines():
 	var y = GRID_HEIGHT - 1
@@ -83,3 +89,81 @@ func check_and_clear_lines():
 			_clear_row(y)
 		else:
 			y -= 1
+	
+	if game_manager.should_spawn_white_block():
+		spawn_white_row()
+
+func _spawn_clear_particles(grid_x: int, grid_y: int, color: Color):
+	var particles = CPUParticles2D.new()
+	add_child(particles)
+	particles.position = Vector2(grid_x * CELL_SIZE + CELL_SIZE / 2, grid_y * CELL_SIZE + CELL_SIZE / 2)
+	particles.emitting = false
+	particles.one_shot = true
+	particles.amount = 8
+	particles.lifetime = 0.5
+	particles.explosiveness = 1.0
+	particles.direction = Vector2(0, -1)
+	particles.spread = 180.0
+	particles.initial_velocity_min = 50.0
+	particles.initial_velocity_max = 150.0
+	particles.gravity = Vector2(0, 300)
+	particles.scale_amount_min = 3.0
+	particles.scale_amount_max = 6.0
+	particles.color = color
+	particles.emitting = true
+	get_tree().create_timer(particles.lifetime + 0.1).timeout.connect(particles.queue_free)
+
+func spawn_white_row():
+	if white_rows_count >= max_white_rows:
+		return
+
+	if _get_player_stack_height() >= GRID_HEIGHT / 2:
+		return
+
+	var new_row = []
+	var empty_index = randi() % GRID_WIDTH
+	for x in range(GRID_WIDTH):
+		if x == empty_index:
+			new_row.append(-1)
+		else:
+			new_row.append(7)
+
+	grid.remove_at(0)
+	grid.append(new_row)
+	white_rows_count += 1
+	queue_redraw()
+
+func _get_player_stack_height() -> int:
+	for y in range(GRID_HEIGHT):
+		for x in range(GRID_WIDTH):
+			if grid[y][x] != -1 and grid[y][x] != 7:
+				return GRID_HEIGHT - y
+	return 0
+
+func _collapse_column(x: int, from_y: int):
+	for y in range(from_y, 0, -1):
+		grid[y][x] = grid[y - 1][x]
+	grid[0][x] = -1
+
+func _is_row_empty(y: int) -> bool:
+	for x in range(GRID_WIDTH):
+		if grid[y][x] != -1:
+			return false
+	return true
+
+func _collapse_empty_row(y: int):
+	grid.remove_at(y)
+	var new_row = []
+	for x in range(GRID_WIDTH):
+		new_row.append(-1)
+	grid.insert(0, new_row)
+
+func _collapse_all_empty_rows():
+	var seen_non_empty = false
+	for y in range(GRID_HEIGHT - 1, -1, -1):
+		if _is_row_empty(y):
+			if seen_non_empty:
+				_collapse_empty_row(y)
+				return
+		else:
+			seen_non_empty = true

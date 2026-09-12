@@ -113,10 +113,6 @@ func _generate_random_piece():
 	for i in range(offsets.size()):
 		colors.append(base_color)
 
-	if game_manager.should_spawn_white_block():
-		var white_index = randi() % colors.size()
-		colors[white_index] = 7
-
 	return {"type": type, "offsets": offsets, "colors": colors}
 	
 func _spawn_piece():
@@ -137,12 +133,14 @@ func _spawn_piece():
 	next_offsets = upcoming.offsets
 	next_colors = upcoming.colors
 
+	queue_redraw()
+	
 	if not _can_move(block_offsets, grid_position):
 		is_game_over = true
 		print("Game Over")
 		return
 
-	queue_redraw()
+
 
 func _draw():
 	var ghost_pos = _get_ghost_position()

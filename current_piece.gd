@@ -36,3 +36,8 @@ func _unhandled_input(event):
 	elif event.is_action_pressed("ui_down"):
 		grid_position.y += 1
 		queue_redraw()
+
+
+func _on_timer_timeout() -> void:
+	grid_position.y += 1
+	queue_redraw()

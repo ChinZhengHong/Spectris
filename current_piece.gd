@@ -145,6 +145,12 @@ func _spawn_piece():
 	queue_redraw()
 
 func _draw():
+	var ghost_pos = _get_ghost_position()
+	for i in range(block_offsets.size()):
+		var ghost_cell = ghost_pos + block_offsets[i]
+		var ghost_rect = Rect2(ghost_cell.x * CELL_SIZE, ghost_cell.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+		draw_rect(ghost_rect, Color(1, 1, 1, 0.2))
+		
 	for i in range(block_offsets.size()):
 		var cell = grid_position + block_offsets[i]
 		var rect = Rect2(cell.x * CELL_SIZE, cell.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
@@ -169,7 +175,11 @@ func _unhandled_input(event):
 					grid_position = test_pos
 					queue_redraw()
 					break
-
+	elif event.is_action_pressed("ui_select"):
+		while _can_move(block_offsets, grid_position + Vector2i(0, 1)):
+			grid_position += Vector2i(0, 1)
+		_lock_piece()
+		_spawn_piece()
 
 func _on_timer_timeout() -> void:
 	if is_game_over:
@@ -189,3 +199,9 @@ func _lock_piece():
 	board.check_and_clear_lines()
 	board.queue_redraw()
 	timer.wait_time = game_manager.get_current_fall_time()
+
+func _get_ghost_position() -> Vector2i:
+	var ghost_pos = grid_position
+	while _can_move(block_offsets, ghost_pos + Vector2i(0, 1)):
+		ghost_pos += Vector2i(0, 1)
+	return ghost_pos

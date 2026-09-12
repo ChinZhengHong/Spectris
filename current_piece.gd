@@ -21,6 +21,13 @@ func _can_move(offsets: Array, pos: Vector2i) -> bool:
 			return false
 	return true
 
+# rotate
+func _get_rotated_offsets(offsets: Array) -> Array:
+	var rotated = []
+	for offset in offsets:
+		rotated.append(Vector2i(-offset.y, offset.x))
+	return rotated
+
 func _ready():
 	_spawn_piece()
 	
@@ -53,6 +60,12 @@ func _unhandled_input(event):
 		var new_pos = grid_position + Vector2i(0, 1)
 		if _can_move(block_offsets, new_pos):
 			grid_position = new_pos
+			queue_redraw()
+			
+	elif event.is_action_pressed("ui_up"):
+		var new_offsets = _get_rotated_offsets(block_offsets)
+		if _can_move(new_offsets, grid_position):
+			block_offsets = new_offsets
 			queue_redraw()
 
 

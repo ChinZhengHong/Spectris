@@ -125,6 +125,7 @@ func spawn_white_row():
 	grid.remove_at(0)
 	grid.append(new_row)
 	white_rows_count += 1
+	game_manager.mutant_player.play()
 	queue_redraw()
 
 func _get_player_stack_height() -> int:

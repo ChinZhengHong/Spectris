@@ -58,8 +58,39 @@ offset_right = 610.0
 offset_bottom = 123.0
 text = "Progress: 0/10"
 
+[node name="GameOverPanel" type="Panel" parent="UI"]
+visible = false
+offset_right = 800.0
+offset_bottom = 640.0
+
+[node name="FinalScoreLabel" type="Label" parent="UI/GameOverPanel"]
+custom_minimum_size = Vector2(330, 340)
+layout_mode = 0
+offset_left = 280.0
+offset_top = 280.0
+offset_right = 610.0
+offset_bottom = 620.0
+text = "Final Score: 0"
+
+[node name="GameOverLabell" type="Label" parent="UI/GameOverPanel"]
+layout_mode = 0
+offset_left = 280.0
+offset_top = 220.0
+offset_right = 372.0
+offset_bottom = 243.0
+text = "GAME OVER"
+
+[node name="RestartButton" type="Button" parent="UI/GameOverPanel"]
+layout_mode = 0
+offset_left = 330.0
+offset_top = 340.0
+offset_right = 395.0
+offset_bottom = 371.0
+text = "Restart"
+
 [node name="NextPieceReview" type="Node2D" parent="."]
 position = Vector2(500, 150)
 script = ExtResource("4_hw73r")
 
 [connection signal="timeout" from="CurrentPiece/Timer" to="CurrentPiece" method="_on_timer_timeout"]
+[connection signal="pressed" from="UI/GameOverPanel/RestartButton" to="GameManager" method="_on_restart_button_pressed"]

@@ -18,6 +18,9 @@ var score_since_last_white = 0
 @onready var game_over_player = get_node("GameOverPlayer")
 @onready var mutant_player = get_node("MutantPlayer")
 @onready var board = get_node("../Board")
+@onready var current_piece = get_node("../CurrentPiece")
+@onready var game_over_panel = get_node("../UI/GameOverPanel")
+@onready var final_score_label = get_node("../UI/GameOverPanel/FinalScoreLabel")
 
 var clear_row_sounds = [
 	preload("res://sound_effect/ClearRow1.wav"),
@@ -47,7 +50,6 @@ func get_random_piece_color() -> int:
 func should_spawn_white_block() -> bool:
 	if score_since_last_white >= SCORE_PER_WHITE_BLOCK:
 		score_since_last_white -= SCORE_PER_WHITE_BLOCK
-		mutant_player.play()
 		return true
 	return false
 
@@ -87,6 +89,18 @@ func _ready():
 func _process(delta):
 	elapsed_time += delta
 
+	if current_piece.is_game_over and not game_over_panel.visible:
+		_show_game_over()
+
+func _show_game_over():
+	game_over_panel.visible = true
+	final_score_label.text = "Final Score: " + str(score)
+	game_over_player.play()
+
 func _play_clear_row_sound():
 	clear_row_player.stream = clear_row_sounds[randi() % clear_row_sounds.size()]
 	clear_row_player.play()
+
+
+func _on_restart_button_pressed() -> void:
+	get_tree().reload_current_scene()

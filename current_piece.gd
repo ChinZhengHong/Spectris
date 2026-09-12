@@ -82,4 +82,5 @@ func _lock_piece():
 	for offset in block_offsets:
 		var cell = grid_position + offset
 		board.grid[cell.y][cell.x] = 0
+	board.check_and_clear_lines()
 	board.queue_redraw()

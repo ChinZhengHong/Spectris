@@ -36,3 +36,27 @@ func _draw():
 			if grid[y][x] != -1:
 				var rect = Rect2(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
 				draw_rect(rect, Color.WHITE)
+
+# check the row
+func _is_row_full(y: int) -> bool:
+	for x in range(GRID_WIDTH):
+		if grid[y][x] == -1:
+			return false
+	return true
+	
+# clear row
+func _clear_row(y: int):
+	grid.remove_at(y)
+	var new_row = []
+	for x in range(GRID_WIDTH):
+		new_row.append(-1)
+	grid.insert(0, new_row)
+	
+
+func check_and_clear_lines():
+	var y = GRID_HEIGHT - 1
+	while y >= 0:
+		if _is_row_full(y):
+			_clear_row(y)
+		else:
+			y -= 1

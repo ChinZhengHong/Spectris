@@ -12,6 +12,7 @@ var block_colors = []
 var next_type = PieceData.PieceType.T
 var next_offsets = []
 var next_colors = []
+var can_swap = true
 var move_direction = 0
 var das_timer = 0.0
 var arr_timer = 0.0
@@ -151,6 +152,7 @@ func _spawn_piece():
 		block_colors = next_colors
 
 	grid_position = Vector2i(4, 1)
+	can_swap = true
 
 	var upcoming = _generate_random_piece()
 	next_type = upcoming.type
@@ -208,6 +210,9 @@ func _unhandled_input(event):
 	elif event.is_action_pressed("rotate_cw"):
 		_try_rotate(true)
 
+	elif event.is_action_pressed("swap_piece"):
+		_swap_with_next()
+
 func _on_timer_timeout() -> void:
 	if is_game_over:
 		return
@@ -232,3 +237,28 @@ func _get_ghost_position() -> Vector2i:
 	while _can_move(block_offsets, ghost_pos + Vector2i(0, 1)):
 		ghost_pos += Vector2i(0, 1)
 	return ghost_pos
+
+func _swap_with_next():
+	if not can_swap:
+		return
+
+	var temp_type = current_type
+	var temp_offsets = block_offsets
+
+	current_type = next_type
+	block_offsets = next_offsets
+	block_colors = next_colors
+
+	next_type = temp_type
+	next_offsets = temp_offsets
+
+	var next_base_color = game_manager.get_random_piece_color()
+	next_colors = []
+	for i in range(next_offsets.size()):
+		next_colors.append(next_base_color)
+
+	if not _can_move(block_offsets, grid_position):
+		grid_position = Vector2i(4, 1)
+
+	can_swap = false
+	queue_redraw()

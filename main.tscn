@@ -58,6 +58,19 @@ offset_right = 610.0
 offset_bottom = 123.0
 text = "Progress: 0/10"
 
+[node name="ControlsLabel" type="Label" parent="UI"]
+offset_left = 500.0
+offset_top = 250.0
+offset_right = 647.0
+offset_bottom = 403.0
+text = "Controls: 
+← →     Move 
+↓            Soft Drop 
+Space   Hard Drop 
+↑ / C      Rotate CW 
+X           Rotate CCW
+Shift     Swap"
+
 [node name="GameOverPanel" type="Panel" parent="UI"]
 visible = false
 offset_right = 800.0
@@ -95,18 +108,6 @@ offset_top = 390.0
 offset_right = 381.0
 offset_bottom = 421.0
 text = "Main Menu"
-
-[node name="ControlsLabel" type="Label" parent="UI"]
-offset_left = 500.0
-offset_top = 250.0
-offset_right = 540.0
-offset_bottom = 273.0
-text = "Controls: 
-← →     Move 
-↓            Soft Drop 
-Space   Hard Drop 
-↑ / C      Rotate CW 
-X           Rotate CCW"
 
 [node name="NextPieceReview" type="Node2D" parent="."]
 position = Vector2(500, 150)

@@ -88,9 +88,30 @@ offset_right = 365.0
 offset_bottom = 371.0
 text = "Restart"
 
+[node name="MenuButton" type="Button" parent="UI/GameOverPanel"]
+layout_mode = 0
+offset_left = 285.0
+offset_top = 390.0
+offset_right = 381.0
+offset_bottom = 421.0
+text = "Main Menu"
+
+[node name="ControlsLabel" type="Label" parent="UI"]
+offset_left = 500.0
+offset_top = 250.0
+offset_right = 540.0
+offset_bottom = 273.0
+text = "Controls: 
+← →     Move 
+↓            Soft Drop 
+Space   Hard Drop 
+↑ / C      Rotate CW 
+X           Rotate CCW"
+
 [node name="NextPieceReview" type="Node2D" parent="."]
 position = Vector2(500, 150)
 script = ExtResource("4_hw73r")
 
 [connection signal="timeout" from="CurrentPiece/Timer" to="CurrentPiece" method="_on_timer_timeout"]
 [connection signal="pressed" from="UI/GameOverPanel/RestartButton" to="GameManager" method="_on_restart_button_pressed"]
+[connection signal="pressed" from="UI/GameOverPanel/MenuButton" to="GameManager" method="_on_menu_button_pressed"]

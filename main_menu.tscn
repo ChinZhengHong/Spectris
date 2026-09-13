@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0h2kpvpxcdev"]
+
+[ext_resource type="Script" path="res://main_menu.gd" id="1_qmudy"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qmudy")
+
+[node name="TitleLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 150.0
+offset_right = 382.0
+offset_bottom = 173.0
+scale = Vector2(1.75, 1.75)
+text = "Spectris"
+
+[node name="StartButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 280.0
+offset_right = 396.0
+offset_bottom = 311.0
+text = "Start"
+
+[node name="QuitButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 330.0
+offset_right = 392.0
+offset_bottom = 361.0
+text = "Quit"
+
+[connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="QuitButton" to="." method="_on_quit_button_pressed"]

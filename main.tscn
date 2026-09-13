@@ -82,9 +82,9 @@ text = "GAME OVER"
 
 [node name="RestartButton" type="Button" parent="UI/GameOverPanel"]
 layout_mode = 0
-offset_left = 330.0
+offset_left = 300.0
 offset_top = 340.0
-offset_right = 395.0
+offset_right = 365.0
 offset_bottom = 371.0
 text = "Restart"
 
